@@ -12,6 +12,7 @@ pygame.display.set_caption("Agent Conman")
 
 # Load images
 bg = pygame.image.load("images/Background 910X584.png")
+bg = pygame.transform.scale(bg, (width, height))  # Scale to fit the screen
 mario_image = pygame.image.load("images/images.png").convert_alpha()
 platform_image = pygame.image.load("images/piece of ground.jpg").convert_alpha()
 coin_image = pygame.image.load("images/Coin 1.png").convert_alpha()
@@ -38,27 +39,26 @@ font = pygame.font.SysFont("Arial", 36)
 
 # Player attributes
 player_size = 40
-start_x, start_y = 50, height - 500 - player_size
+start_x, start_y = 50, height - 120 - player_size  # Start 120px from the bottom
 mario_pos = pygame.Rect(start_x, start_y, player_size, player_size)
 mario_speed = 5
-jump_height = 35
 is_jumping = False
-jump_count = 10
-
-# Gravity
-gravity = 0.3
-mario_velocity_y = 0
+jump_power = 10  # Adjusted jump power for better gameplay
+gravity = 0.5  # Smoothed gravity for realistic falling
+velocity_y = 0
 
 # Ground
 ground = pygame.Rect(0, height - 50, width, 50)
 
-# Platforms and finish line
+# Platforms
 platforms = [
-    pygame.Rect(200, height - 250 - player_size, 100, 20),
-    pygame.Rect(400, height - 400 - player_size, 100, 20),
-    pygame.Rect(600, height - 550 - player_size, 100, 20)
+    pygame.Rect(200, height - 250 - 20, 100, 20),  # Corrected y-position of platforms
+    pygame.Rect(400, height - 400 - 20, 100, 20),
+    pygame.Rect(600, height - 550 - 20, 100, 20)
 ]
-finish_line = pygame.Rect(width - 100, height - 150 - player_size, 50, 50)
+
+# Finish line
+finish_line = pygame.Rect(width - 100, height - 150, 50, 50)
 
 # Coin attributes
 coin_size = 30
@@ -89,6 +89,13 @@ def reset_game():
     score = 0
     coin_pos = generate_coin_position()
     level = 1
+
+# Collision detection function
+def check_collision(rect, platforms):
+    for platform in platforms:
+        if rect.colliderect(platform):
+            return platform
+    return None
 
 # Draw menu
 def draw_menu():
@@ -182,44 +189,36 @@ while running:
             mario_pos.x -= mario_speed
         if keys[pygame.K_RIGHT]:
             mario_pos.x += mario_speed
-        if not is_jumping:
-            if keys[pygame.K_UP]:
-                is_jumping = True
-        else:
-            if jump_count >= -10:
-                neg = 1
-                if jump_count < 0:
-                    neg = -1
-                mario_pos.y -= (jump_count ** 2) * 0.5 * neg
-                jump_count -= 1
-            else:
-                is_jumping = False
-                jump_count = 10
+        if keys[pygame.K_UP] and not is_jumping:
+            is_jumping = True
+            velocity_y = -jump_power
 
-        # Gravity
-        mario_velocity_y += gravity
-        mario_pos.y += mario_velocity_y
+        # Apply gravity
+        velocity_y += gravity
+        mario_pos.y += velocity_y
 
-        # Boundaries
+        # Boundary checks
         mario_pos.x = max(0, min(width - mario_pos.width, mario_pos.x))
 
-        # Collision with ground
-        if mario_pos.y > ground.y - mario_pos.height:
+        # Ground collision
+        if mario_pos.y >= ground.y - mario_pos.height:
             mario_pos.y = ground.y - mario_pos.height
-            mario_velocity_y = 0
+            velocity_y = 0
+            is_jumping = False
 
-        # Collision with platforms
-        for platform in platforms:
-            if mario_pos.colliderect(platform) and mario_velocity_y > 0:
-                mario_pos.y = platform.y - mario_pos.height
-                mario_velocity_y = 0
+        # Platform collision
+        platform = check_collision(mario_pos, platforms)
+        if platform and velocity_y > 0:
+            mario_pos.y = platform.y - mario_pos.height
+            velocity_y = 0
+            is_jumping = False
 
-        # Collision with coin
+        # Coin collision
         if mario_pos.colliderect(pygame.Rect(*coin_pos, coin_size, coin_size)):
             score += 1
             coin_pos = generate_coin_position()
 
-        # Collision with finish line
+        # Finish line collision
         if mario_pos.colliderect(finish_line):
             level += 1
             reset_game()
