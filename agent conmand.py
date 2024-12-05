@@ -11,7 +11,7 @@ screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Agent Command")
 
 # Load images
-bg = pygame.image.load("images/Baground.png")
+bg = pygame.image.load("images/Bagroundfull.png")
 agent_image = pygame.image.load("images/images.png").convert_alpha()
 image = pygame.image.load("images/piece of ground.jpg")
 # Set the color key (RGB value of the background color to be removed)
