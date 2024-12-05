@@ -6,7 +6,7 @@ import random
 pygame.init()
 
 # Screen dimensions
-width, height = 960, 1080
+width, height = 910, 580
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Mario Game")
 
@@ -34,10 +34,10 @@ FPS = 60
 
 # Player attributes
 player_size = 40
-start_x, start_y = 100, height - 150 - player_size  # Adjustable starting position (100px from the bottom)
+start_x, start_y = 50, height - 500 - player_size  # Adjustable starting position (100px from the bottom)
 mario_pos = pygame.Rect(start_x, start_y, player_size, player_size)
 mario_speed = 5
-jump_height = 15  # Increased jump height
+jump_height = 35 # Increased jump height
 is_jumping = False
 jump_count = 10
 
@@ -86,6 +86,12 @@ for i in range(len(pause_texts)):
 
 paused = False
 
+# Level display function
+def draw_level_info(level):
+    font = pygame.font.Font(None, 74)
+    text = font.render(f"Level {level}", True, WHITE)
+    screen.blit(text, (width // 2 - text.get_width() // 2, 10))
+
 def draw_pause_menu():
     for text_surface, text_rect in pause_buttons:
         screen.blit(text_surface, text_rect)
@@ -97,6 +103,7 @@ def reset_game():
     coin_pos = generate_coin_position()
 
 # Game loop
+level = 1
 running = True
 while running:
     for event in pygame.event.get():
@@ -157,7 +164,6 @@ while running:
         # Check if player reaches the finish line
         if mario_pos.colliderect(finish_line):
             print("Level Complete!")
-            message_displayed=True
 
         # Coin collision
         if (mario_pos[0] < coin_pos[0] < mario_pos[0] + player_size or mario_pos[0] < coin_pos[0] + coin_size < mario_pos[0] + player_size) and (mario_pos[1] < coin_pos[1] + player_size or mario_pos[1] < coin_pos[1] + coin_size < mario_pos[1] + player_size):
@@ -181,6 +187,9 @@ while running:
     # Display the congratulatory message 
     if message_displayed: 
         screen.blit(congrats_message, (50, height // 2))
+
+    # Display level info
+    draw_level_info(level)
 
     if paused:
         draw_pause_menu()
