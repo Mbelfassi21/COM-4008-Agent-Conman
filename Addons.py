@@ -8,13 +8,13 @@ pygame.init()
 # Screen dimensions
 width, height = 910, 580
 screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Mario Game")
+pygame.display.set_caption("Agent Conman")
 
 # Load images
-bg = pygame.image.load("images/Bagroundfull.png")
+bg = pygame.image.load("images/Background 910X584.png")
 mario_image = pygame.image.load("images/images.png").convert_alpha()
 platform_image = pygame.image.load("images/piece of ground.jpg").convert_alpha()
-coin_image = pygame.image.load("images/coin.jpg").convert_alpha()
+coin_image = pygame.image.load("images/Coin 1.png").convert_alpha()
 # Set the color key (RGB value of the background color to be removed)
 mario_image.set_colorkey((255, 255, 255))  # Assuming the background is white
 
