@@ -13,7 +13,7 @@ pygame.display.set_caption("Agent Conman")
 # Load images
 bg = pygame.image.load("images/Background 910X584.png")
 bg = pygame.transform.scale(bg, (width, height))  # Scale to fit the screen
-mario_image = pygame.image.load("images/images.png").convert_alpha()
+mario_image = pygame.image.load("images/rb_7770.png").convert_alpha()
 platform_image = pygame.image.load("images/piece of ground.jpg").convert_alpha()
 coin_image = pygame.image.load("images/Coin 1.png").convert_alpha()
 
