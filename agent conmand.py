@@ -11,7 +11,7 @@ screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Agent Command")
 
 # Load images
-bg = pygame.image.load("images/background.jpg")
+bg = pygame.image.load("images/Bagroundfull.png")
 agent_image = pygame.image.load("images/images.png").convert_alpha()
 image = pygame.image.load("images/piece of ground.jpg")
 # Set the color key (RGB value of the background color to be removed)
@@ -121,7 +121,7 @@ while running:
     #coin collision
     if (agent_pos[0] < coin_pos[0] < agent_pos[0] + player_size or agent_pos[0] < coin_pos[0] + coin_size < agent_pos[0] + player_size) and (agent_pos[1] < coin_pos[1] + player_size or agent_pos[1] < coin_pos[1] + coin_size < agent_pos[1] + player_size):
         score += 1
-        coin_pos = [random.randint(0, width - coin_size), random.randint(o, height - coin_size)]
+        coin_pos = [random.randint(0, width - coin_size), random.randint(0, height - coin_size)]
 
     #display score
     font = pygame.font.SysFont("monospace", 35)
