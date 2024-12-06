@@ -38,6 +38,7 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
+YELLOW = (255, 255, 0)
 
 # Clock settings
 clock = pygame.time.Clock()
@@ -161,16 +162,22 @@ def draw_menu():
     title = font.render("Agent Conman", True, WHITE)
     screen.blit(title, (width // 2 - title.get_width() // 2, 100))
 
+    # Get the current mouse position
+    mouse_pos = pygame.mouse.get_pos()
+
     # Define menu options with rectangles
     options = ["Start Game", "Instructions", "Exit"]
     menu_buttons = []
     for i, option in enumerate(options):
-        option_text = font.render(option, True, WHITE)
+        # Highlight the option if the mouse is over it
+        highlight_color = YELLOW if pygame.Rect(width // 2 - 100, 200 + i * 50 - 10, 200, 40).collidepoint(mouse_pos) else WHITE
+        option_text = font.render(option, True, highlight_color)
         option_rect = option_text.get_rect(center=(width // 2, 200 + i * 50))
         screen.blit(option_text, option_rect.topleft)
         menu_buttons.append((option_rect, option))  
 
-    return menu_buttons  
+    return menu_buttons
+
 
 # Draw instructions
 def draw_instructions():
@@ -189,12 +196,16 @@ def draw_instructions():
         text = font.render(line, True, WHITE)
         screen.blit(text, (50, 50 + i * 40))
 
-    # Add a Back button
-    back_text = font.render("BACK", True, WHITE)
+    # Get the current mouse position
+    mouse_pos = pygame.mouse.get_pos()
+
+    # Highlight the Back button if hovered
+    back_highlight_color = YELLOW if pygame.Rect(width // 2 - 50, height - 70, 100, 40).collidepoint(mouse_pos) else WHITE
+    back_text = font.render("BACK", True, back_highlight_color)
     back_rect = back_text.get_rect(center=(width // 2, height - 50))
     screen.blit(back_text, back_rect.topleft)
 
-    return back_rect  # Return Back button for interaction
+    return back_rect
 
 # Draw pause menu with clickable buttons
 def draw_pause_menu():
@@ -202,16 +213,21 @@ def draw_pause_menu():
     pause_title = font.render("Paused", True, WHITE)
     screen.blit(pause_title, (width // 2 - pause_title.get_width() // 2, 100))
 
+    # Get the current mouse position
+    mouse_pos = pygame.mouse.get_pos()
+
     # Define pause menu options with rectangles
     options = ["Resume", "New Game", "Exit"]
     pause_buttons = []
     for i, option in enumerate(options):
-        option_text = font.render(option, True, WHITE)
+        # Highlight the option if the mouse is over it
+        highlight_color = YELLOW if pygame.Rect(width // 2 - 100, 200 + i * 50 - 10, 200, 40).collidepoint(mouse_pos) else WHITE
+        option_text = font.render(option, True, highlight_color)
         option_rect = option_text.get_rect(center=(width // 2, 200 + i * 50))
         screen.blit(option_text, option_rect.topleft)
-        pause_buttons.append((option_rect, option))  # Store rect and associated option text
+        pause_buttons.append((option_rect, option))  
 
-    return pause_buttons  # Return buttons for interaction
+    return pause_buttons
 
 # Coin attributes
 coin_size = 30
