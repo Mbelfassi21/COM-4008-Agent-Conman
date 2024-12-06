@@ -48,11 +48,11 @@ agent_velocity_y = 0
 # Level elements
 ground = pygame.Rect(0, height - 50, width, 50)  # Define the ground
 platforms = [
-    pygame.Rect(200, height - 250 - player_size, 100, 20),  # Platforms adjusted to be reachable and start from bottom
-    pygame.Rect(400, height - 400 - player_size, 100, 20),
-    pygame.Rect(600, height - 550 - player_size, 100, 20)
+    pygame.Rect(200, height - 150, 150, 30),  # Larger and lower platforms
+    pygame.Rect(400, height - 250, 150, 30),
+    pygame.Rect(600, height - 350, 150, 30)
 ]
-finish_line = pygame.Rect(width - 100, height - 150 - player_size, 50, 50)  # Finish line adjusted to be reachable and start from bottom
+finish_line = pygame.Rect(width - 100, height - 150, 50, 50)  # Finish line adjusted to be reachable and start from bottom
 
 # Coin attributes
 coin_size = 30
