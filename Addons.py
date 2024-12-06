@@ -122,15 +122,28 @@ def draw_pause_menu():
 # Coin attributes
 coin_size = 30
 
-def generate_coin_position():
-    while True:
-        coin_x = random.randint(0, width - coin_size)
-        coin_y = random.randint(0, height - coin_size - 100)  # Ensure coin is reachable by player
-        coin_pos = [coin_x, coin_y]
-        if not any(platform.collidepoint(coin_pos) for platform in platforms):
-            return coin_pos
+# Function to place coins on platforms
+def place_coins_on_platforms(platforms):
+    coins = []
+    for platform in platforms:
+        platform_width = platform.width
+        platform_x = platform.x
+        platform_y = platform.y
 
-coin_pos = generate_coin_position()
+        # Calculate positions for three coins evenly spaced on the platform
+        coin_positions = [
+            (platform_x + platform_width // 4 - coin_size // 2, platform_y - coin_size),
+            (platform_x + platform_width // 2 - coin_size // 2, platform_y - coin_size),
+            (platform_x + 3 * platform_width // 4 - coin_size // 2, platform_y - coin_size)
+        ]
+
+        for pos in coin_positions:
+            coins.append(pygame.Rect(pos[0], pos[1], coin_size, coin_size))
+
+    return coins
+
+# Initialize coins
+coins = place_coins_on_platforms(platforms)
 
 # Score
 score = 0
@@ -162,11 +175,10 @@ def draw_pause_menu():
         screen.blit(text_surface, text_rect)
 
 def reset_game():
-    global agent_pos, score, coin_pos
+    global agent_pos, score, coins
     agent_pos.topleft = (start_x, start_y)
     score = 0
-    coin_pos = generate_coin_position()
-
+    coins = place_coins_on_platforms(platforms)
 
 # Game loop 
 level = 1
@@ -274,9 +286,10 @@ while running:
             running = False  # End the game after finishing
 
         # Coin collision
-        if (agent_pos[0] < coin_pos[0] < agent_pos[0] + player_size or agent_pos[0] < coin_pos[0] + coin_size < agent_pos[0] + player_size) and (agent_pos[1] < coin_pos[1] + player_size or agent_pos[1] < coin_pos[1] + coin_size < agent_pos[1] + player_size):
-            score += 1
-            coin_pos = generate_coin_position()
+        for coin in coins:
+            if agent_pos.colliderect(coin):
+                score += 1
+                coins.remove(coin)
 
         # Draw everything
         screen.fill(BLACK)
@@ -285,7 +298,8 @@ while running:
         for platform in platforms:
             screen.blit(platform_image, platform.topleft)
         screen.blit(scaled_agent_image, agent_pos)
-        screen.blit(coin_image, coin_pos)
+        for coin in coins:
+            screen.blit(coin_image, coin.topleft)
 
         # Display score
         font_score = pygame.font.SysFont("monospace", 35)
