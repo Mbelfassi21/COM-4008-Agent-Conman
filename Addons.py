@@ -10,11 +10,17 @@ width, height = 910, 580
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Agent Conman")
 
+
+# Defining Finish_Line
+finish_line = pygame.Rect(width - 100, height - 150, 50, 50)  # Define finish line rectangle
+finish_line.y -= 350  # Adjust position
+
 # Load images
 agent_image = pygame.image.load("images/rb_7770.png").convert_alpha()
 platform_image = pygame.image.load("images/piece of ground.jpg").convert_alpha()
 coin_image = pygame.image.load("images/Coin 1.png").convert_alpha()
 finish_line_image = pygame.image.load("images/gold chest.png").convert_alpha()
+scaled_finish_line_image = pygame.transform.scale(finish_line_image, (finish_line.width, finish_line.height))
 
 #Music 
 pygame.mixer.init()
@@ -420,7 +426,7 @@ while running:
 
         # Draw everything
         screen.fill(BLACK)
-        pygame.draw.rect(screen, GREEN, finish_line)
+        screen.blit(scaled_finish_line_image, finish_line.topleft)
         pygame.draw.rect(screen, BLACK, ground)
         for platform in platforms:
             screen.blit(platform_image, platform.topleft)
