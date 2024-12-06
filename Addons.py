@@ -53,6 +53,7 @@ platforms = [
     pygame.Rect(600, height - 350, 150, 30)
 ]
 finish_line = pygame.Rect(width - 100, height - 150, 50, 50)  # Finish line adjusted to be reachable and start from bottom
+finish_line.y -= 350  # Moves the rectangle 50 pixels higher
 
 # Coin attributes
 coin_size = 30
