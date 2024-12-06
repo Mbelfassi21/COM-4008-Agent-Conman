@@ -206,9 +206,26 @@ def reset_game():
     score = 0
     coins = place_coins_on_platforms(platforms)
 
+# Before the game loop
+pygame.mixer.init()
+pygame.mixer.music.load("images/BGM1.mp3")
+pygame.mixer.music.set_volume(0.5)
+pygame.mixer.music.play(-1)
+
 # Game loop 
+
+for event in pygame.event.get():
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_PLUS or event.key == pygame.K_KP_PLUS:  # Increase volume
+            volume = min(pygame.mixer.music.get_volume() + 0.1, 1.0)
+            pygame.mixer.music.set_volume(volume)
+        if event.key == pygame.K_MINUS or event.key == pygame.K_KP_MINUS:  # Decrease volume
+            volume = max(pygame.mixer.music.get_volume() - 0.1, 0.0)
+            pygame.mixer.music.set_volume(volume)
+
 level = 1
 running = True
+
 <<<<<<< Updated upstream
 =======
 while running:
