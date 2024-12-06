@@ -59,6 +59,8 @@ agent_velocity_y = 0
 # Level elements
 # Level data initialization
 ground = pygame.Rect(0, height - 50, width, 50)  # Define the ground
+
+# Level data initialization
 levels = [
     {  # Level 1
         "platforms": [
@@ -88,24 +90,56 @@ levels = [
     },
     {  # Level 4
         "platforms": [
-            pygame.Rect(150, height - 300, 150, 30),
-            pygame.Rect(400, height - 250, 150, 30),
-            pygame.Rect(650, height - 350, 150, 30),
-            pygame.Rect(850, height - 450, 150, 30),
+            pygame.Rect(250, height - 180, 200, 30),
+            pygame.Rect(450, height - 250, 150, 30),
+            pygame.Rect(300, height - 400, 150, 30),
+            pygame.Rect(600, height - 350, 200, 30)
         ],
-        "finish_line": pygame.Rect(width - 100, height - 450, 50, 50),
+        "finish_line": pygame.Rect(width - 100, height - 250, 50, 50),
     },
     {  # Level 5
         "platforms": [
-            pygame.Rect(200, height - 400, 150, 30),
-            pygame.Rect(400, height - 300, 150, 30),
-            pygame.Rect(600, height - 200, 150, 30),
-            pygame.Rect(800, height - 100, 150, 30),
+            pygame.Rect(100, height - 150, 100, 30),
+            pygame.Rect(300, height - 300, 120, 30),
+            pygame.Rect(500, height - 400, 140, 30),
+            pygame.Rect(700, height - 350, 160, 30),
+            pygame.Rect(400, height - 450, 180, 30),
         ],
-        "finish_line": pygame.Rect(width - 100, height - 100, 50, 50),
+        "finish_line": pygame.Rect(width - 120, height - 400, 50, 50),
     },
+    {  # Level 6
+        "platforms": [
+            pygame.Rect(50, height - 100, 120, 30),
+            pygame.Rect(200, height - 250, 120, 30),
+            pygame.Rect(400, height - 150, 120, 30),
+            pygame.Rect(650, height - 300, 120, 30),
+            pygame.Rect(800, height - 200, 120, 30)
+        ],
+        "finish_line": pygame.Rect(width - 80, height - 300, 50, 50),
+    },
+    {  # Level 7
+        "platforms": [
+            pygame.Rect(100, height - 200, 180, 30),
+            pygame.Rect(350, height - 250, 200, 30),
+            pygame.Rect(600, height - 400, 120, 30),
+            pygame.Rect(500, height - 450, 100, 30),
+            pygame.Rect(750, height - 150, 150, 30),
+            pygame.Rect(200, height - 350, 120, 30)
+        ],
+        "finish_line": pygame.Rect(width - 60, height - 450, 50, 50),
+    },
+    {  # Level 8 (Final Level)
+        "platforms": [
+            pygame.Rect(50, height - 150, 100, 30),
+            pygame.Rect(200, height - 300, 120, 30),
+            pygame.Rect(400, height - 450, 150, 30),
+            pygame.Rect(600, height - 200, 200, 30),
+            pygame.Rect(800, height - 400, 160, 30),
+            pygame.Rect(350, height - 350, 140, 30),
+        ],
+        "finish_line": pygame.Rect(width - 120, height - 400, 50, 50),
+    }
 ]
-
 
 # Function to load level elements
 def load_level(level):
