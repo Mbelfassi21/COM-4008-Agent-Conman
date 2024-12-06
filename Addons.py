@@ -6,15 +6,15 @@ import random
 pygame.init()
 
 # Screen dimensions
-width, height = 910, 580
+width, height = 990, 800
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Agent Conman")
 
 # Load images
-bg = pygame.image.load("images/Background 910X584.png")
 mario_image = pygame.image.load("images/images.png").convert_alpha()
 platform_image = pygame.image.load("images/piece of ground.jpg").convert_alpha()
 coin_image = pygame.image.load("images/Coin 1.png").convert_alpha()
+
 # Set the color key (RGB value of the background color to be removed)
 mario_image.set_colorkey((255, 255, 255))  # Assuming the background is white
 
@@ -37,7 +37,7 @@ player_size = 40
 start_x, start_y = 50, height - 500 - player_size  # Adjustable starting position (100px from the bottom)
 mario_pos = pygame.Rect(start_x, start_y, player_size, player_size)
 mario_speed = 5
-jump_height = 35 # Increased jump height
+jump_height = 35  # Increased jump height
 is_jumping = False
 jump_count = 10
 
@@ -60,7 +60,7 @@ coin_size = 30
 def generate_coin_position():
     while True:
         coin_x = random.randint(0, width - coin_size)
-        coin_y = random.randint(0, height - coin_size - 100) # Ensure coin is reachable by player
+        coin_y = random.randint(0, height - coin_size - 100)  # Ensure coin is reachable by player
         coin_pos = [coin_x, coin_y]
         if not any(platform.collidepoint(coin_pos) for platform in platforms):
             return coin_pos
@@ -71,8 +71,8 @@ coin_pos = generate_coin_position()
 score = 0
 
 # Font settings for the congratulatory message and pause menu
-font = pygame.font.SysFont('Arial', 36) 
-congrats_message = font.render("You have reached your goal, Congratulations!", True, BLUE) 
+font = pygame.font.SysFont('Arial', 36)
+congrats_message = font.render("You have reached your goal, Congratulations!", True, BLUE)
 message_displayed = False
 
 pause_font = pygame.font.SysFont('Arial', 48)
@@ -171,7 +171,7 @@ while running:
             coin_pos = generate_coin_position()
 
     # Draw everything
-    screen.blit(bg, (0, 0))
+    screen.fill(BLACK)
     pygame.draw.rect(screen, GREEN, finish_line)
     pygame.draw.rect(screen, BLACK, ground)
     for platform in platforms:
