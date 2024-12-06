@@ -14,6 +14,7 @@ pygame.display.set_caption("Agent Conman")
 agent_image = pygame.image.load("images/rb_7770.png").convert_alpha()
 platform_image = pygame.image.load("images/piece of ground.jpg").convert_alpha()
 coin_image = pygame.image.load("images/Coin 1.png").convert_alpha()
+finish_line_image = pygame.image.load("images/gold chest.png").convert_alpha()
 
 #Music 
 pygame.mixer.init()
