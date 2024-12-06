@@ -15,6 +15,12 @@ agent_image = pygame.image.load("images/rb_7770.png").convert_alpha()
 platform_image = pygame.image.load("images/piece of ground.jpg").convert_alpha()
 coin_image = pygame.image.load("images/Coin 1.png").convert_alpha()
 
+#Music 
+pygame.mixer.init()
+pygame.mixer.music.load("images/BGM1.mp3")
+pygame.mixer.music.set_volume(0.5)
+pygame.mixer.music.play(-1)
+
 # Set the color key (RGB value of the background color to be removed)
 agent_image.set_colorkey((255, 255, 255))  # Assuming the background is white
 
