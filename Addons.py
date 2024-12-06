@@ -57,16 +57,69 @@ gravity = 0.3  # Reduced gravity
 agent_velocity_y = 0
 
 # Level elements
+# Level data initialization
 ground = pygame.Rect(0, height - 50, width, 50)  # Define the ground
-platforms = [
-    pygame.Rect(200, height - 150, 150, 30),  # Larger and lower platforms
-    pygame.Rect(400, height - 250, 150, 30),
-    pygame.Rect(600, height - 350, 150, 30)
+levels = [
+    {  # Level 1
+        "platforms": [
+            pygame.Rect(200, height - 150, 150, 30),
+            pygame.Rect(400, height - 250, 150, 30),
+            pygame.Rect(600, height - 350, 150, 30)
+        ],
+        "finish_line": pygame.Rect(width - 100, height - 350, 50, 50),
+    },
+    {  # Level 2
+        "platforms": [
+            pygame.Rect(150, height - 200, 150, 30),
+            pygame.Rect(350, height - 300, 150, 30),
+            pygame.Rect(550, height - 400, 150, 30),
+            pygame.Rect(750, height - 300, 150, 30)
+        ],
+        "finish_line": pygame.Rect(width - 100, height - 200, 50, 50),
+    },
+    {  # Level 3
+        "platforms": [
+            pygame.Rect(100, height - 150, 150, 30),
+            pygame.Rect(300, height - 200, 150, 30),
+            pygame.Rect(500, height - 250, 150, 30),
+            pygame.Rect(700, height - 300, 150, 30)
+        ],
+        "finish_line": pygame.Rect(width - 150, height - 300, 50, 50),
+    },
+    {  # Level 4
+        "platforms": [
+            pygame.Rect(150, height - 300, 150, 30),
+            pygame.Rect(400, height - 250, 150, 30),
+            pygame.Rect(650, height - 350, 150, 30),
+            pygame.Rect(850, height - 450, 150, 30),
+        ],
+        "finish_line": pygame.Rect(width - 100, height - 450, 50, 50),
+    },
+    {  # Level 5
+        "platforms": [
+            pygame.Rect(200, height - 400, 150, 30),
+            pygame.Rect(400, height - 300, 150, 30),
+            pygame.Rect(600, height - 200, 150, 30),
+            pygame.Rect(800, height - 100, 150, 30),
+        ],
+        "finish_line": pygame.Rect(width - 100, height - 100, 50, 50),
+    },
 ]
-finish_line = pygame.Rect(width - 100, height - 150, 50, 50)  # Finish line adjusted to be reachable and start from bottom
-finish_line.y -= 350  # Moves the rectangle 350 pixels higher
 
 
+# Function to load level elements
+def load_level(level):
+    global platforms, finish_line
+    if level > len(levels):  # If no more levels
+        print("Congratulations, you finished the game!")
+        pygame.quit()
+        sys.exit()
+    platforms = levels[level - 1]["platforms"]  # Load platforms for the level
+    finish_line = levels[level - 1]["finish_line"]  # Load the finish line for the level
+
+# Initial level setup
+level = 1  # Start from level 1
+load_level(level)  # Load the first level
 
 # Draw menu with clicks
 def draw_menu():
@@ -171,6 +224,20 @@ for i in range(len(pause_texts)):
 
 paused = False
 
+def load_level(level):
+    global platforms, coins, finish_line, agent_pos
+    if level > len(levels):  # Check if the player has finished all levels
+        print("You completed the game! Congratulations!")
+        pygame.quit()
+        sys.exit()
+
+    # Load the new level's data
+    platforms = levels[level - 1]["platforms"]
+    finish_line = levels[level - 1]["finish_line"]
+    coins = place_coins_on_platforms(platforms)
+    agent_pos.topleft = (start_x, start_y)  # Reset agent position
+
+
 # Level display function
 def draw_level_info(level):
     font = pygame.font.Font(None, 74)
@@ -182,10 +249,13 @@ def draw_pause_menu():
         screen.blit(text_surface, text_rect)
 
 def reset_game():
-    global agent_pos, score, coins
-    agent_pos.topleft = (start_x, start_y)
+    global level, score
+    level = 1  # Reset to the first level
+    load_level(level)
     score = 0
-    coins = place_coins_on_platforms(platforms)
+
+# Load the first level
+load_level(level)
 
 # Game loop 
 level = 1
@@ -287,10 +357,9 @@ while running:
                 agent_velocity_y = 0
 
         # Check if player reaches the finish line
-        if agent_pos.colliderect(finish_line):
-            message_displayed = True
-            pygame.time.delay(2000)  # Display congratulatory message briefly
-            running = False  # End the game after finishing
+            if agent_pos.colliderect(finish_line):
+               level += 1  # Advance to the next level
+               load_level(level)  # Load the new level
 
         # Coin collision
         for coin in coins:
