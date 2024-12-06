@@ -21,6 +21,11 @@ agent_image.set_colorkey((255, 255, 255))  # Assuming the background is white
 # Scale the character image
 scaled_agent_image = pygame.transform.scale(agent_image, (40, 40))  # New size (width, height)
 
+# Menu variables
+main_menu = True
+paused = False
+instructions = False
+
 # Colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -53,6 +58,65 @@ platforms = [
     pygame.Rect(600, height - 550 - player_size, 100, 20)
 ]
 finish_line = pygame.Rect(width - 100, height - 150 - player_size, 50, 50)  # Finish line adjusted to be reachable and start from bottom
+
+
+# Draw menu with clicks
+def draw_menu():
+    screen.fill(BLACK)
+    title = font.render("Agent Conman", True, WHITE)
+    screen.blit(title, (width // 2 - title.get_width() // 2, 100))
+
+    # Define menu options with rectangles
+    options = ["Start Game", "Instructions", "Exit"]
+    menu_buttons = []
+    for i, option in enumerate(options):
+        option_text = font.render(option, True, WHITE)
+        option_rect = option_text.get_rect(center=(width // 2, 200 + i * 50))
+        screen.blit(option_text, option_rect.topleft)
+        menu_buttons.append((option_rect, option))  
+
+    return menu_buttons  
+
+# Draw instructions
+def draw_instructions():
+    screen.fill(BLACK)
+    lines = [
+        "Instructions:",
+        "1. Use arrow keys to move left and right.",
+        "2. Press UP to jump.",
+        "3. Collect coins and reach the finish line.",
+        "4. Press P to pause the game.",
+        "Click BACK to return to the menu."
+    ]
+
+    # Render instructions text
+    for i, line in enumerate(lines):
+        text = font.render(line, True, WHITE)
+        screen.blit(text, (50, 50 + i * 40))
+
+    # Add a Back button
+    back_text = font.render("BACK", True, WHITE)
+    back_rect = back_text.get_rect(center=(width // 2, height - 50))
+    screen.blit(back_text, back_rect.topleft)
+
+    return back_rect  # Return Back button for interaction
+
+# Draw pause menu with clickable buttons
+def draw_pause_menu():
+    screen.fill(BLACK)
+    pause_title = font.render("Paused", True, WHITE)
+    screen.blit(pause_title, (width // 2 - pause_title.get_width() // 2, 100))
+
+    # Define pause menu options with rectangles
+    options = ["Resume", "New Game", "Exit"]
+    pause_buttons = []
+    for i, option in enumerate(options):
+        option_text = font.render(option, True, WHITE)
+        option_rect = option_text.get_rect(center=(width // 2, 200 + i * 50))
+        screen.blit(option_text, option_rect.topleft)
+        pause_buttons.append((option_rect, option))  # Store rect and associated option text
+
+    return pause_buttons  # Return buttons for interaction
 
 # Coin attributes
 coin_size = 30
@@ -102,31 +166,72 @@ def reset_game():
     score = 0
     coin_pos = generate_coin_position()
 
-# Game loop
+
+# Game loop 
 level = 1
 running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_p:
-                paused = not paused
-        
-        if paused and event.type == pygame.MOUSEBUTTONDOWN:
-            mouse_pos = event.pos
-            for i in range(len(pause_buttons)):
-                if pause_buttons[i][1].collidepoint(mouse_pos):
-                    if i == 0: # Resume button
-                        paused = False
-                    elif i == 1: # New Game button
-                        reset_game()
-                        paused = False
-                    elif i == 2: # Exit button
-                        running = False
 
-    if not paused:
+menu_buttons = []  # Store menu buttons
+back_button = None  # Store back button for instructions
+
+while running:
+    if main_menu:
+        menu_buttons = draw_menu()  # Draw main menu and get buttons
+        pygame.display.flip()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:  # Check for mouse clicks
+                mouse_pos = event.pos
+                for button_rect, option in menu_buttons:
+                    if button_rect.collidepoint(mouse_pos):  # If button is clicked
+                        if option == "Start Game":
+                            main_menu = False  # Start the game
+                        elif option == "Instructions":
+                            instructions = True  # Go to instructions menu
+                            main_menu = False
+                        elif option == "Exit":
+                            running = False  # Exit the game
+
+    elif instructions:
+        back_button = draw_instructions()  # Draw instructions screen
+        pygame.display.flip()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:  # Check for mouse clicks
+                mouse_pos = event.pos
+                if back_button.collidepoint(mouse_pos):  # If back button is clicked
+                    instructions = False
+                    main_menu = True  # Return to the main menu
+
+    elif paused:
+        draw_pause_menu()  # Draw pause menu
+        pygame.display.flip()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = event.pos
+                for i, (_, button_rect) in enumerate(pause_buttons):
+                    if button_rect.collidepoint(mouse_pos):
+                        if i == 0:  # Resume button
+                            paused = False
+                        elif i == 1:  # New Game button
+                            reset_game()
+                            paused = False
+                        elif i == 2:  # Exit button
+                            running = False
+
+    else:  # Game state
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_p:
+                    paused = True
+
+        # Player movement logic
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             agent_pos.x -= agent_speed
@@ -147,7 +252,7 @@ while running:
                 jump_count = 10
 
         # Apply gravity
-        agent_velocity_y += gravity 
+        agent_velocity_y += gravity
         agent_pos.y += agent_velocity_y
 
         # Check for collision with the ground
@@ -163,39 +268,34 @@ while running:
 
         # Check if player reaches the finish line
         if agent_pos.colliderect(finish_line):
-            print("Level Complete!")
+            message_displayed = True
+            pygame.time.delay(2000)  # Display congratulatory message briefly
+            running = False  # End the game after finishing
 
         # Coin collision
         if (agent_pos[0] < coin_pos[0] < agent_pos[0] + player_size or agent_pos[0] < coin_pos[0] + coin_size < agent_pos[0] + player_size) and (agent_pos[1] < coin_pos[1] + player_size or agent_pos[1] < coin_pos[1] + coin_size < agent_pos[1] + player_size):
             score += 1
             coin_pos = generate_coin_position()
 
-    # Draw everything
-    screen.fill(BLACK)
-    pygame.draw.rect(screen, GREEN, finish_line)
-    pygame.draw.rect(screen, BLACK, ground)
-    for platform in platforms:
-        screen.blit(platform_image, platform.topleft)  
-    screen.blit(scaled_agent_image, agent_pos)
-    screen.blit(coin_image, coin_pos)
+        # Draw everything
+        screen.fill(BLACK)
+        pygame.draw.rect(screen, GREEN, finish_line)
+        pygame.draw.rect(screen, BLACK, ground)
+        for platform in platforms:
+            screen.blit(platform_image, platform.topleft)
+        screen.blit(scaled_agent_image, agent_pos)
+        screen.blit(coin_image, coin_pos)
 
-    # Display score
-    font_score= pygame.font.SysFont("monospace",35)
-    score_text= font_score.render("Score: "+str(score),True ,RED)
-    screen.blit(score_text,(10 ,10))
+        # Display score
+        font_score = pygame.font.SysFont("monospace", 35)
+        score_text = font_score.render("Score: " + str(score), True, RED)
+        screen.blit(score_text, (10, 10))
 
-    # Display the congratulatory message 
-    if message_displayed: 
-        screen.blit(congrats_message, (50, height // 2))
+        # Display level info
+        draw_level_info(level)
 
-    # Display level info
-    draw_level_info(level)
-
-    if paused:
-        draw_pause_menu()
-
-    pygame.display.flip()
-    clock.tick(FPS)
+        pygame.display.flip()
+        clock.tick(FPS)
 
 pygame.quit()
 sys.exit()
