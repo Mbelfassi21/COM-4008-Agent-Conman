@@ -22,6 +22,15 @@ coin_image = pygame.image.load("images/Coin 1.png").convert_alpha()
 finish_line_image = pygame.image.load("images/gold chest.png").convert_alpha()
 scaled_finish_line_image = pygame.transform.scale(finish_line_image, (finish_line.width, finish_line.height))
 
+# Pause button 
+pause_button_width = 50
+pause_button_height = 50
+pause_button_rect = pygame.Rect(width - pause_button_width - 10, 10, pause_button_width, pause_button_height)
+
+#Pause button icon
+pause_button_image = pygame.image.load("images/pause_icon.png").convert_alpha()  # Replace with your image
+pause_button_image = pygame.transform.scale(pause_button_image, (pause_button_width, pause_button_height))
+
 #Music 
 pygame.mixer.init()
 pygame.mixer.music.load("images/BGM1.mp3")
@@ -72,18 +81,23 @@ ground = pygame.Rect(0, height - 50, width, 50)  # Define the ground
 levels = [
     {  # Level 1
         "platforms": [
-            pygame.Rect(200, height - 150, 150, 30),
-            pygame.Rect(400, height - 250, 150, 30),
-            pygame.Rect(600, height - 350, 150, 30)
+            pygame.Rect(120, height - 470, 150, 30),
+            pygame.Rect(130, height - 265, 150, 30),
+            pygame.Rect(230, height - 420, 150, 30),
+            pygame.Rect(290, height - 130, 150, 30),
+            pygame.Rect(360, height - 340, 150, 30),
+            pygame.Rect(500, height - 210, 150, 30),
+            pygame.Rect(560, height - 300, 150, 30),
+            pygame.Rect(695, height - 390, 150, 30)
         ],
-        "finish_line": pygame.Rect(width - 100, height - 450, 50, 50),
+        "finish_line": pygame.Rect(width - 80, height - 100, 50, 50),
     },
     {  # Level 2
         "platforms": [
             pygame.Rect(150, height - 200, 150, 30),
             pygame.Rect(350, height - 300, 150, 30),
             pygame.Rect(550, height - 470, 150, 30),
-            #pygame.Rect(750, height - 400, 150, 30)
+            pygame.Rect(750, height - 400, 150, 30)
         ],
         "finish_line": pygame.Rect(width - 100, height - 490, 50, 50),
     },
@@ -92,16 +106,16 @@ levels = [
             pygame.Rect(100, height - 150, 150, 30),
             pygame.Rect(300, height - 250, 150, 30),
             pygame.Rect(500, height - 235, 150, 30),
-            #pygame.Rect(700, height - 300, 150, 30)
+            pygame.Rect(700, height - 300, 150, 30)
         ],
-        "finish_line": pygame.Rect(width - 150, height - 450, 50, 50),
+        "finish_line": pygame.Rect(width - 150, height - 420, 50, 50),
     },
     {  # Level 4
         "platforms": [
             pygame.Rect(250, height - 180, 200, 30),
             pygame.Rect(450, height - 250, 150, 30),
             pygame.Rect(300, height - 400, 150, 30),
-            #pygame.Rect(600, height - 350, 200, 30)
+            pygame.Rect(600, height - 350, 200, 30)
         ],
         "finish_line": pygame.Rect(width - 100, height - 250, 50, 50),
     },
@@ -109,7 +123,7 @@ levels = [
         "platforms": [
             pygame.Rect(100, height - 150, 100, 30),
             pygame.Rect(300, height - 300, 120, 30),
-            #pygame.Rect(500, height - 400, 140, 30),
+            pygame.Rect(500, height - 400, 140, 30),
             pygame.Rect(700, height - 350, 160, 30),
             pygame.Rect(400, height - 400, 180, 30),
         ],
@@ -129,7 +143,7 @@ levels = [
         "platforms": [
             pygame.Rect(100, height - 200, 180, 30),
             pygame.Rect(350, height - 250, 200, 30),
-            #pygame.Rect(600, height - 400, 120, 30),
+            pygame.Rect(600, height - 400, 120, 30),
             pygame.Rect(400, height - 450, 100, 30),
             pygame.Rect(750, height - 150, 150, 30),
             pygame.Rect(200, height - 350, 145, 30)
@@ -142,7 +156,7 @@ levels = [
             pygame.Rect(200, height - 300, 120, 30),
             pygame.Rect(400, height - 450, 150, 30),
             pygame.Rect(600, height - 200, 200, 30),
-            #pygame.Rect(800, height - 400, 160, 30),
+            pygame.Rect(800, height - 400, 160, 30),
             pygame.Rect(350, height - 350, 140, 30),
         ],
         "finish_line": pygame.Rect(width - 120, height - 400, 50, 50),
@@ -357,26 +371,31 @@ while running:
         pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
+               running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = event.pos
                 for i, (_, button_rect) in enumerate(pause_buttons):
                     if button_rect.collidepoint(mouse_pos):
                         if i == 0:  # Resume button
-                            paused = False
+                           paused = False
                         elif i == 1:  # New Game button
-                            reset_game()
-                            paused = False
+                             reset_game()
+                             paused = False
                         elif i == 2:  # Exit button
-                            running = False
+                             running = False
+                if pause_button_rect.collidepoint(mouse_pos):  # Unpause if pause button clicked
+                     paused = False
+
 
     else:  # Game state
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_p:
-                    paused = True
+            if event.type == pygame.MOUSEBUTTONDOWN:  # Check for mouse clicks
+                mouse_pos = event.pos
+                if pause_button_rect.collidepoint(mouse_pos):  # If pause button is clicked
+                    paused = not paused  # Toggle pause state
+
 
         # Player movement logic
         keys = pygame.key.get_pressed()
@@ -427,6 +446,7 @@ while running:
         # Draw everything
         screen.fill(BLACK)
         screen.blit(scaled_finish_line_image, finish_line.topleft)
+        screen.blit(pause_button_image, pause_button_rect.topleft)
         pygame.draw.rect(screen, BLACK, ground)
         for platform in platforms:
             screen.blit(platform_image, platform.topleft)
