@@ -443,6 +443,17 @@ while running:
                 score += 1
                 coins.remove(coin)
 
+        # Constrain player within the screen boundaries
+        if agent_pos.x < 0:
+            agent_pos.x = 0
+        elif agent_pos.x + agent_pos.width > width:
+            agent_pos.x = width - agent_pos.width
+
+        if agent_pos.y < 0:
+            agent_pos.y = 0
+        elif agent_pos.y + agent_pos.height > height:
+            agent_pos.y = height - agent_pos.height
+
         # Draw everything
         screen.fill(BLACK)
         screen.blit(scaled_finish_line_image, finish_line.topleft)
