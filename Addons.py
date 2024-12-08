@@ -37,19 +37,6 @@ pygame.mixer.music.load("images/BGM1.mp3")
 pygame.mixer.music.set_volume(0.5)
 pygame.mixer.music.play(-1)
 
-# Mute button
-mute_button_width = 50
-mute_button_height = 50
-mute_button_rect = pygame.Rect(width - 2 * mute_button_width - 20, 10, mute_button_width, mute_button_height)
-
-# Mute button icon
-mute_icon_on = pygame.image.load("images/mute_icon.jpg").convert_alpha()  # Replace with your mute icon
-mute_icon_off = pygame.image.load("images/unmute_icon.png").convert_alpha()  # Replace with your unmute icon
-mute_icon_on = pygame.transform.scale(mute_icon_on, (mute_button_width, mute_button_height))
-mute_icon_off = pygame.transform.scale(mute_icon_off, (mute_button_width, mute_button_height))
-is_muted = False  # Default state: sound is on
-
-
 # Set the color key (RGB value of the background color to be removed)
 agent_image.set_colorkey((255, 255, 255))  # Assuming the background is white
 
@@ -222,7 +209,7 @@ def draw_instructions():
         "2. Press UP to jump.",
         "3. Collect coins and reach the finish line.",
         "4. Press P to pause the game.",
-        "BACK to return to the menu."
+        "Click BACK to return to the menu."
     ]
 
     # Render instructions text
@@ -399,18 +386,6 @@ while running:
                 if pause_button_rect.collidepoint(mouse_pos):  # Unpause if pause button clicked
                      paused = False
 
-for event in pygame.event.get():
-    if event.type == pygame.QUIT:
-        running = False
-    if event.type == pygame.MOUSEBUTTONDOWN:  # Check for mouse clicks
-        mouse_pos = event.pos
-        if pause_button_rect.collidepoint(mouse_pos):  # Pause button clicked
-            paused = not paused
-        elif mute_button_rect.collidepoint(mouse_pos):  # Mute button clicked
-            is_muted = not is_muted
-            pygame.mixer.music.set_volume(0.0 if is_muted else 0.5)  # Mute or unmute music
-
-
 
     else:  # Game state
         for event in pygame.event.get():
@@ -489,10 +464,6 @@ for event in pygame.event.get():
         screen.blit(scaled_agent_image, agent_pos)
         for coin in coins:
             screen.blit(coin_image, coin.topleft)
-        # Draw pause and mute buttons
-        screen.blit(pause_button_image, pause_button_rect.topleft)
-        screen.blit(mute_icon_on if is_muted else mute_icon_off, mute_button_rect.topleft)
-
 
         # Display score
         font_score = pygame.font.SysFont("monospace", 35)
