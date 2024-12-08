@@ -262,19 +262,18 @@ def draw_pause_menu():
 coin_size = 30
 
 #Spikes
-spike_width, spike_height = 30, 30  # Dimensions of the spikes
+spike_width, spike_height = 910, 30  # Dimensions of the spikes
 lives = 3  # Player starts with 3 lives
 
-def place_spikes_on_platforms(platforms):
+def place_spikes_on_ground():
     spikes = []
-    for i, platform in enumerate(platforms):
-        if i % 2 == 0:  # Place spikes on every alternate platform
-            spike_x = platform.x + platform.width // 2 - spike_width // 2
-            spike_y = platform.y - spike_height
-            spikes.append(pygame.Rect(spike_x, spike_y, spike_width, spike_height))
+    for i in range(100, width, 200):
+        spike_x = i
+        spike_y = ground.y - spike_height
+        spikes.append(pygame.Rect(spike_x, spike_y, spike_width, spike_height)) 
     return spikes
 
-spikes = place_spikes_on_platforms(platforms)
+spikes = place_spikes_on_ground()
 
 def reset_lives():
     global lives
