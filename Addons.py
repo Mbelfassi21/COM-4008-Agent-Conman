@@ -22,6 +22,14 @@ coin_image = pygame.image.load("images/Coin 1.png").convert_alpha()
 finish_line_image = pygame.image.load("images/gold chest.png").convert_alpha()
 scaled_finish_line_image = pygame.transform.scale(finish_line_image, (finish_line.width, finish_line.height))
 
+#spike dimensions
+spike_width, spike_height = 30, 30  # Define spike dimensions
+
+# Load spike image
+spike_image = pygame.image.load("images/Spikes.png").convert_alpha()
+scaled_spike_image = pygame.transform.scale(spike_image, (spike_width, spike_height))
+
+
 # Pause button 
 pause_button_width = 50
 pause_button_height = 50
@@ -253,6 +261,26 @@ def draw_pause_menu():
 # Coin attributes
 coin_size = 30
 
+#Spikes
+spike_width, spike_height = 30, 30  # Dimensions of the spikes
+lives = 3  # Player starts with 3 lives
+
+def place_spikes_on_platforms(platforms):
+    spikes = []
+    for i, platform in enumerate(platforms):
+        if i % 2 == 0:  # Place spikes on every alternate platform
+            spike_x = platform.x + platform.width // 2 - spike_width // 2
+            spike_y = platform.y - spike_height
+            spikes.append(pygame.Rect(spike_x, spike_y, spike_width, spike_height))
+    return spikes
+
+spikes = place_spikes_on_platforms(platforms)
+
+def reset_lives():
+    global lives
+    lives = 3
+
+    
 # Function to place coins on platforms
 def place_coins_on_platforms(platforms):
     coins = []
@@ -432,6 +460,17 @@ while running:
                 agent_pos.y = platform.y - agent_pos.height
                 agent_velocity_y = 0
 
+        # Check for collision with spikes
+        for spike in spikes:
+            if agent_pos.colliderect(spike):
+                lives -= 1
+                agent_pos.topleft = (start_x, start_y)  # Reset agent position
+                if lives <= 0:
+                    print("Game Over!")
+                    pygame.quit()
+                    sys.exit()
+
+
         # Check if player reaches the finish line
             if agent_pos.colliderect(finish_line):
                level += 1  # Advance to the next level
@@ -442,6 +481,18 @@ while running:
             if agent_pos.colliderect(coin):
                 score += 1
                 coins.remove(coin)
+
+        # Spike collision
+        for spike in spikes:
+            if agent_pos.colliderect(spike):
+                lives -= 1
+                print(f"Lives remaining: {lives}")
+                if lives <= 0:
+                    print("Game Over!")
+                    running = False
+                # Reset player position after losing a life
+                agent_pos.topleft = (start_x, start_y)
+
 
         # Constrain player within the screen boundaries
         if agent_pos.x < 0:
@@ -464,11 +515,17 @@ while running:
         screen.blit(scaled_agent_image, agent_pos)
         for coin in coins:
             screen.blit(coin_image, coin.topleft)
+        for spike in spikes:
+            screen.blit(scaled_spike_image, spike.topleft)
 
         # Display score
         font_score = pygame.font.SysFont("monospace", 35)
         score_text = font_score.render("Score: " + str(score), True, RED)
         screen.blit(score_text, (10, 10))
+
+        # Display lives
+        lives_text = font_score.render("Lives: " + str(lives), True, GREEN)
+        screen.blit(lives_text, (10, 50))
 
         # Display level info
         draw_level_info(level)
