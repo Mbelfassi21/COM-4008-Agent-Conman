@@ -21,6 +21,8 @@ platform_image = pygame.image.load("images/piece of ground.jpg").convert_alpha()
 coin_image = pygame.image.load("images/Coin 1.png").convert_alpha()
 finish_line_image = pygame.image.load("images/gold chest.png").convert_alpha()
 scaled_finish_line_image = pygame.transform.scale(finish_line_image, (finish_line.width, finish_line.height))
+menu_background_image = pygame.image.load("images/Menu_Bg.png").convert_alpha()
+menu_background_image = pygame.transform.scale(menu_background_image, (width, height))  # Scale to screen size
 
 #spike dimensions
 spike_width, spike_height = 30, 30  # Define spike dimensions
@@ -63,6 +65,10 @@ RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 YELLOW = (255, 255, 0)
+
+#Font
+custom_font = pygame.font.Font("Fonts/Algerian Regular.ttf", 72)  # Replace with your font file and desired size
+title = custom_font.render("Agent Conman", True, WHITE)
 
 # Clock settings
 clock = pygame.time.Clock()
@@ -187,20 +193,21 @@ load_level(level)  # Load the first level
 
 # Draw menu with clicks
 def draw_menu():
-    screen.fill(BLACK)
-    title = font.render("Agent Conman", True, WHITE)
+    screen.blit(menu_background_image, (0, 0))
+    custom_font = pygame.font.Font("Fonts/Algerian Regular.ttf", 72)  # Replace with your font file path
+    title = custom_font.render("Agent Conman", True, BLACK)
     screen.blit(title, (width // 2 - title.get_width() // 2, 100))
 
     # Get the current mouse position
     mouse_pos = pygame.mouse.get_pos()
-
+    custom_font2 = pygame.font.Font("Fonts/Algerian Regular.ttf", 50)
     # Define menu options with rectangles
     options = ["Start Game", "Instructions", "Exit"]
     menu_buttons = []
     for i, option in enumerate(options):
         # Highlight the option if the mouse is over it
-        highlight_color = YELLOW if pygame.Rect(width // 2 - 100, 200 + i * 50 - 10, 200, 40).collidepoint(mouse_pos) else WHITE
-        option_text = font.render(option, True, highlight_color)
+        highlight_color = YELLOW if pygame.Rect(width // 2 - 100, 200 + i * 50 - 10, 200, 40).collidepoint(mouse_pos) else BLACK
+        option_text = custom_font2.render(option, True, highlight_color)
         option_rect = option_text.get_rect(center=(width // 2, 200 + i * 50))
         screen.blit(option_text, option_rect.topleft)
         menu_buttons.append((option_rect, option))  
