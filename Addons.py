@@ -200,7 +200,7 @@ def draw_menu():
 
     # Get the current mouse position
     mouse_pos = pygame.mouse.get_pos()
-    custom_font2 = pygame.font.Font("Fonts/Algerian Regular.ttf", 50)
+    custom_font2 = pygame.font.Font("Fonts/Algerian Regular.ttf", 50 )
     # Define menu options with rectangles
     options = ["Start Game", "Instructions", "Exit"]
     menu_buttons = []
@@ -354,13 +354,31 @@ def draw_pause_menu():
         screen.blit(text_surface, text_rect)
 
 def reset_game():
-    global level, score
+    global level, score, lives, game_over
     level = 1  # Reset to the first level
     load_level(level)
     score = 0
+    lives = 3  # Reset lives
+    game_over = False
 
 # Load the first level
 load_level(level)
+
+game_over = False
+
+def draw_game_over_screen():
+    screen.fill(BLACK)
+    font_game_over = pygame.font.Font(None, 72)  # Adjust font size as needed
+    game_over_text = font_game_over.render("You Lost!", True, RED)
+    screen.blit(game_over_text, (width // 2 - game_over_text.get_width() // 2, height // 2 - 100))
+
+    # Draw the "New Game" button
+    font_button = pygame.font.Font(None, 48)
+    new_game_text = font_button.render("New Game", True, WHITE)
+    new_game_rect = new_game_text.get_rect(center=(width // 2, height // 2 + 50))
+    screen.blit(new_game_text, new_game_rect.topleft)
+
+    return new_game_rect  # Return the button's rectangle for click detection
 
 # Game loop 
 level = 1
@@ -419,6 +437,19 @@ while running:
                              running = False
                 if pause_button_rect.collidepoint(mouse_pos):  # Unpause if pause button clicked
                      paused = False
+    
+    elif game_over:
+        new_game_button = draw_game_over_screen()  # Draw the game over screen
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+           if event.type == pygame.QUIT:
+               running = False
+           elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = event.pos
+                if new_game_button.collidepoint(mouse_pos):  # Restart the game if the button is clicked
+                   reset_game()  # Reset the game variables
+                   game_over = False
 
 
     else:  # Game state
@@ -472,9 +503,7 @@ while running:
                 lives -= 1
                 agent_pos.topleft = (start_x, start_y)  # Reset agent position
                 if lives <= 0:
-                    print("Game Over!")
-                    pygame.quit()
-                    sys.exit()
+                  game_over = True
 
 
         # Check if player reaches the finish line
