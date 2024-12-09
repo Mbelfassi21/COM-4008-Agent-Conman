@@ -265,12 +265,12 @@ def draw_pause_menu():
 coin_size = 30
 
 #Spikes
-spike_width, spike_height = 910, 30  # Dimensions of the spikes
+spike_width, spike_height = 910, 40  # Dimensions of the spikes
 lives = 3  # Player starts with 3 lives
 
 def place_spikes_on_ground():
     spikes = []
-    for i in range(100, width, 200):
+    for i in range(100, width, 180):
         spike_x = i
         spike_y = ground.y - spike_height
         spikes.append(pygame.Rect(spike_x, spike_y, spike_width, spike_height)) 
