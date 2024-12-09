@@ -24,12 +24,12 @@ scaled_finish_line_image = pygame.transform.scale(finish_line_image, (finish_lin
 menu_background_image = pygame.image.load("images/Menu_Bg.png").convert_alpha()
 menu_background_image = pygame.transform.scale(menu_background_image, (width, height))  # Scale to screen size
 
-#spike dimensions
-spike_width, spike_height = 30, 30  # Define spike dimensions
+spike_width, spike_height = 200, 40  # Make the spike image wider (60px width)
 
 # Load spike image
 spike_image = pygame.image.load("images/Spikes.png").convert_alpha()
 scaled_spike_image = pygame.transform.scale(spike_image, (spike_width, spike_height))
+
 
 
 # Pause button 
@@ -97,12 +97,9 @@ levels = [
         "platforms": [
             pygame.Rect(120, height - 470, 150, 30),
             pygame.Rect(130, height - 265, 150, 30),
-            pygame.Rect(230, height - 420, 150, 30),
             pygame.Rect(290, height - 130, 150, 30),
             pygame.Rect(360, height - 340, 150, 30),
-            pygame.Rect(500, height - 210, 150, 30),
             pygame.Rect(560, height - 300, 150, 30),
-            pygame.Rect(695, height - 390, 150, 30)
         ],
         "finish_line": pygame.Rect(width - 80, height - 100, 50, 50),
     },
@@ -126,7 +123,7 @@ levels = [
     },
     {  # Level 4
         "platforms": [
-            pygame.Rect(250, height - 180, 200, 30),
+            pygame.Rect(150, height - 180, 200, 30),
             pygame.Rect(450, height - 250, 150, 30),
             pygame.Rect(300, height - 400, 150, 30),
             pygame.Rect(600, height - 350, 200, 30)
@@ -162,7 +159,7 @@ levels = [
             pygame.Rect(750, height - 150, 150, 30),
             pygame.Rect(200, height - 350, 145, 30)
         ],
-        "finish_line": pygame.Rect(width - 180, height - 450, 50, 50),
+        "finish_line": pygame.Rect(width - 220, height - 450, 50, 50),
     },
     {  # Level 8 (Final Level)
         "platforms": [
@@ -170,8 +167,7 @@ levels = [
             pygame.Rect(200, height - 300, 120, 30),
             pygame.Rect(400, height - 450, 150, 30),
             pygame.Rect(600, height - 200, 200, 30),
-            pygame.Rect(800, height - 400, 160, 30),
-            pygame.Rect(350, height - 350, 140, 30),
+            #pygame.Rect(350, height - 400, 140, 30),
         ],
         "finish_line": pygame.Rect(width - 120, height - 400, 50, 50),
     }
