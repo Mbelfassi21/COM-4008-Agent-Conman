@@ -359,6 +359,37 @@ def reset_game():
     load_level(level)
     score = 0
 
+def display_game_over():
+    screen.fill(BLACK)  # Clear the screen with a black background
+    font = pygame.font.Font(None, 74)  # Larger font for the Game Over message
+    game_over_text = font.render("Game Over", True, RED)
+    retry_text = font.render("Retry", True, WHITE)
+    exit_text = font.render("Exit", True, WHITE)
+
+    # Center the messages on the screen
+    game_over_text_rect = game_over_text.get_rect(center=(width // 2, height // 3))
+    retry_text_rect = retry_text.get_rect(center=(width // 2, height // 2))
+    exit_text_rect = exit_text.get_rect(center=(width // 2, height // 2 + 100))
+
+    screen.blit(game_over_text, game_over_text_rect)
+    screen.blit(retry_text, retry_text_rect)
+    screen.blit(exit_text, exit_text_rect)
+    pygame.display.flip()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                if retry_text_rect.collidepoint(mouse_pos):
+                    reset_game()  # Restart the game
+                    return
+                elif exit_text_rect.collidepoint(mouse_pos):
+                    pygame.quit()
+                    sys.exit()
+
 # Load the first level
 load_level(level)
 
@@ -494,8 +525,7 @@ while running:
                 lives -= 1
                 print(f"Lives remaining: {lives}")
                 if lives <= 0:
-                    print("Game Over!")
-                    running = False
+                    display_game_over()
                 # Reset player position after losing a life
                 agent_pos.topleft = (start_x, start_y)
 
