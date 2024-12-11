@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 # Agent Conman
 "Agent Conman" is a 2D platformer game where you play as an agile agent navigating through various challenging levels filled with platforms, coins, spikes, and a finish line. Your goal is to collect coins and reach the finish line while avoiding obstacles and maintaining your lives.
 
@@ -71,6 +70,3 @@ Custom Assets: The images and music used in the game are custom assets for this 
 * Power-ups and new mechanics could be introduced.
 * The game can be improved with better collision detection and more interactive features.
 
-
-=======
->>>>>>> Stashed changes
